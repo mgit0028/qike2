@@ -1,0 +1,137 @@
+04.04 11:48
+Termux 详细安装 -- 解决 pip 更新 ， scrapy 无法安装问题 
+Termux 详细安装 -- 解决 pip 更新 ， scrapy 无法安装问题 
+
+
+
+关注
+     Termux是一款强大的安卓终端模拟APP，无需root直接启动，自动安装最小化linux系统，支持apt管理软件包，完美支持python,ruby,go,nodejs。
+
+一.软件下载：
+
+    两个不需要翻墙的方法：
+
+    1.酷安网下载： https://www.coolapk.com/apk/com.termux 
+
+        可以将termux成功安装到手机。但此版本在安装BeautifulSoup4出错，而我没有深入研究下去，就卸载了。解决方法或许可以参见文章这条："2）安装python模块，但此时安装不上，提示更新pip版本"
+
+    2.官网地址下载：  https://termux.com/ ，下载的不是termux，而是 F-Droid ，它是一个致力于 Android 系统自由开源软件(FOSS)的应用平台，可通过它安装termux。我后来用的是这个  
+
+二.软件安装 
+
+  酷安网下载的直接安装到手机。现在描述的是从官网地址下载F-Droid，再从F-Droid上安装termux
+
+1）在手机上安装 F-Droid。若从电脑下载F-Droid，请发送到手机安装。
+
+     
+
+
+
+    2）在手机上打开F-Droid 应用，选择 termux 进行安装
+
+  
+
+三.打开termux 应用，安装python和各个模块
+
+.打开termux  app时，需要耐心等待几分钟。出现$符号时，我们就可以命令行输入，进行各种安装了
+
+  
+
+    1）python安装
+
+     下载安装后要首先更新包，命令行输入以下命令
+
+      apt update
+
+      apt upgrade
+
+      安装python主程序和必要模块。默认的python版本是3.6.4，为了避免安装相关模块失败，python2建议也安装了：
+
+      apt install python python-dev python2 python2-dev
+
+2）安装python模块，但此时安装不上，提示更新pip版本
+
+      --1。安装BeautifulSoup,requests
+
+         pip install BeautifulSoup4 requests
+
+悲剧了，安装不上，提示更新pip版本：
+
+
+
+解决：pip install --upgrade pip
+
+重新输入：pip install BeautifulSoup4 requests
+
+验证pip版本：输入 pip --version
+
+
+
+   --2.安装lxml模块     
+
+
+    apt-get install clang
+
+    apt-get install libxml2 libxml2-dev libxslt libxslt-dev
+
+    pip install lxml
+
+--3.安装scrapy模块（必须先安装lxml才行）
+
+    apt install openssl libffi libffi-dev
+
+   pip install scrapy  （到这步又出错了！！）
+
+
+
+解决：感觉是不是openssl没装全，输入：      
+
+    apt install openssl openssl-tool openssl-dev
+
+    然后重新输入：pip install scrapy  
+
+验证，输入： python
+
+                   import scrapy
+
+没有错误提示，说明安装scrapy成功！
+
+记得验证完输入 quit()退出，继续安装其它模块。
+
+
+
+3）.安装科学计算相关模块numpy和pandas
+
+apt install clang python python-dev fftw libzmq libzmq-dev freetype freetype-dev libpng libpng-dev pkg-config
+
+下面这句有坑，装不上（numpy最新版1.13.1有问题，安装不上，需要指定安装1.12.1版）：
+
+LDFLAGS=" -lm -lcompiler_rt" pip install numpy matplotlib pandas jupyter
+
+改成：LDFLAGS=" -lm -lcompiler_rt" pip install numpy==1.12.1
+
+4）. 安装其他常用模块
+
+  直接pip安装，比如：
+
+  pip install nltk
+
+  pip install demjson
+
+ pip install ipython
+
+ pip install demjson tushare colorama
+
+还有其他：
+
+apt install git      这个码农都懂的
+
+apt install htop    任务管理器
+
+apt install tree     目录树
+
+apt install vim      
+
+ 虽然termux自带vi,如果想使用vim(毕竟神之编辑器),则必须安装,配合.vimrc,bundle 和 git 可以完美配置python开发环境,体验几乎和ubuntu的终端无异.
+
+小贴士：所有安装命令必须在提示符 $下输入，如果是提示符 >>> ，请输入 quit()切换到提示符$
